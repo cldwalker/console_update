@@ -1,21 +1,34 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 class ConsoleUpdateTest < Test::Unit::TestCase
+  def stub_editor_update_with_records(new_records, options={})
+    Bird.stub!(:system) { |editor, file|
+      if options[:expected_attributes]
+        YAML::load_file(file)[0].keys.sort.should == options[:expected_attributes]
+      end
+      File.open(file, 'w+') {|f| f.write(new_records.to_yaml)}
+    }
+  end
+  
+  def create_big_bird(attributes={})
+    @big_bird = Bird.create({:name=>"big bird"}.update(attributes))
+  end
+  
   context "can_console_update" do
-    test "sets default_editable_columns" do
+    test "sets default_editable_attributes" do
       Bird.column_names.include?('bin').should be(true)
-      Bird.default_editable_columns.empty?.should be(false)
-      Bird.default_editable_columns.include?('bin').should be(false)
+      Bird.default_editable_attributes.empty?.should be(false)
+      Bird.default_editable_attributes.include?('bin').should be(false)
     end
         
-    test "sets default_editable_columns with only option" do
+    test "sets default_editable_attributes with only option" do
       Bird.can_console_update :only=>['description']
-      Bird.default_editable_columns.should == ['description']
+      Bird.default_editable_attributes.should == ['description']
     end
     
-    test "sets default_editable_columns with except option" do
+    test "sets default_editable_attributes with except option" do
       Bird.can_console_update :except=>['description']
-      Bird.default_editable_columns.sort.should == ["bin", "created_at", "id", "name", "nickname", "updated_at"]
+      Bird.default_editable_attributes.sort.should == ["bin", "created_at", "id", "name", "nickname", "updated_at"]
     end
     
     test "sets console_editor with editor option" do
@@ -27,19 +40,6 @@ class ConsoleUpdateTest < Test::Unit::TestCase
   context "console_update" do
     before(:all) {|e| Bird.can_console_update }
     before(:each) {|e| Bird.delete_all }
-    
-    def stub_editor_update_with_records(new_records, options={})
-      Bird.stub!(:system) { |editor, file|
-        if options[:expected_attributes]
-          YAML::load_file(file)[0].keys.sort.should == options[:expected_attributes]
-        end
-        File.open(file, 'w+') {|f| f.write(new_records.to_yaml)}
-      }
-    end
-    
-    def create_big_bird(attributes={})
-      @big_bird = Bird.create({:name=>"big bird"}.update(attributes))
-    end
     
     test "updates multiple records" do
       create_big_bird
@@ -100,7 +100,7 @@ class ConsoleUpdateTest < Test::Unit::TestCase
     
     test "with except option edits all columns except those columns" do
       create_big_bird(:description=>"something")
-      expected_attributes = ["bin", "created_at", "id", "name", "nickname", "updated_at"]
+      expected_attributes = ["id", "name", "nickname"]
       stub_editor_update_with_records([@big_bird.attributes.update('name'=>'big birded')], :expected_attributes=>expected_attributes)
       Bird.console_update([@big_bird], :except=>['description'])
       @big_bird.reload.name.should == 'big birded'
@@ -112,6 +112,22 @@ class ConsoleUpdateTest < Test::Unit::TestCase
       Bird.console_update([@big_bird], :only=>["tag_list"] )
       @big_bird.tag_list.should == ['yellow']
     end
+    
+    test "updates and deletes extra attributes added in editor" do
+      create_big_bird
+      stub_editor_update_with_records([{'name'=>'big birded','nickname'=>'doofird', 'id'=>@big_bird.id}])
+      Bird.console_update([@big_bird], :only=>['name'])
+      @big_bird.reload.nickname.should_not == 'doofird'
+    end
   end
   
+  test "editable_attribute_names expire per console_update" do
+    create_big_bird
+    stub_editor_update_with_records([{'name'=>'big birded', 'id'=>@big_bird.id}], :expected_attributes=>["id", "name"])
+    Bird.console_update([@big_bird], :only=>['name'])
+    @big_bird.instance_eval("@editable_attribute_names").should == nil
+    #these expected_attributes would fail if @editable_attribute_names wasn't reset for each console_update()
+    stub_editor_update_with_records([{'description'=>'big birded','id'=>@big_bird.id}], :expected_attributes=>["description", "id"])
+    Bird.console_update([@big_bird], :only=>['description'])
+  end
 end
