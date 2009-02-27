@@ -73,17 +73,24 @@ module ConsoleUpdate
       save
     end
     
+    def console_attributes(attribute_names)
+      attribute_names.inject({}) {|h,e|
+        h[e] = attributes.has_key?(e) ? attributes[e] : send(e)
+        h
+      }
+    end
+    
     def console_editable_attributes(options)
-      new_hash = attributes.dup
       if options[:only]
-        new_hash.delete_if {|k,v| !options[:only].include?(k)}
+        attribute_names = options[:only]
       elsif options[:except]
-        new_hash.delete_if {|k,v| options[:except].include?(k)}
+        attribute_names = attributes.keys - options[:except]
       else
-        new_hash.delete_if {|k,v| !default_editable_columns.include?(k)}
+        attribute_names = default_editable_columns
       end
-      new_hash['id'] ||= self.id
-      new_hash
+      new_attributes = console_attributes(attribute_names)
+      new_attributes['id'] ||= self.id
+      new_attributes
     end
   end
 end

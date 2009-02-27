@@ -21,6 +21,7 @@ ActiveRecord::Base.establish_connection('sqlite3')
 require File.join(File.dirname(__FILE__), 'schema')
 class Bird < ActiveRecord::Base
   attr_protected :description
+  attr_accessor :tag_list
   can_console_update
 end
 

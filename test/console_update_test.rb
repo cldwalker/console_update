@@ -28,8 +28,11 @@ class ConsoleUpdateTest < Test::Unit::TestCase
     before(:all) {|e| Bird.can_console_update }
     before(:each) {|e| Bird.delete_all }
     
-    def stub_editor_update_with_records(new_records)
+    def stub_editor_update_with_records(new_records, options={})
       Bird.stub!(:system) { |editor, file|
+        if options[:expected_attributes]
+          YAML::load_file(file)[0].keys.sort.should == options[:expected_attributes]
+        end
         File.open(file, 'w+') {|f| f.write(new_records.to_yaml)}
       }
     end
@@ -90,18 +93,24 @@ class ConsoleUpdateTest < Test::Unit::TestCase
     
     test "with only option only edits those columns" do
       create_big_bird(:description=>"something")
-      Bird.stub!(:system) {|editor, file|
-        YAML::load_file(file)[0].keys.sort.should == ['id', 'name']
-      }
+      stub_editor_update_with_records([@big_bird.attributes.update('name'=>'big birded')], :expected_attributes=>['id', 'name'])
       Bird.console_update([@big_bird], :only=>['name'])
+      @big_bird.reload.name.should == 'big birded'
     end
     
     test "with except option edits all columns except those columns" do
       create_big_bird(:description=>"something")
-      Bird.stub!(:system) {|editor, file|
-        YAML::load_file(file)[0].keys.sort.should == ["bin", "created_at", "id", "name", "nickname", "updated_at"]
-      }
+      expected_attributes = ["bin", "created_at", "id", "name", "nickname", "updated_at"]
+      stub_editor_update_with_records([@big_bird.attributes.update('name'=>'big birded')], :expected_attributes=>expected_attributes)
       Bird.console_update([@big_bird], :except=>['description'])
+      @big_bird.reload.name.should == 'big birded'
+    end
+    
+    test "sets a non column attribute" do
+      create_big_bird
+      stub_editor_update_with_records([{'tag_list'=>["yellow"], 'id'=>@big_bird.id}], :expected_attributes=>["id","tag_list"])
+      Bird.console_update([@big_bird], :only=>["tag_list"] )
+      @big_bird.tag_list.should == ['yellow']
     end
   end
   
