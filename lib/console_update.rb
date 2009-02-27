@@ -29,7 +29,7 @@ module ConsoleUpdate
     end
     
     def get_default_editable_columns
-      self.class.columns.select {|e| !default_types_to_exclude.include?(e) }.map(&:name)
+      self.columns.select {|e| !default_types_to_exclude.include?(e.type) }.map(&:name)
     end
   end
   
@@ -44,7 +44,7 @@ module ConsoleUpdate
           end
         end
       rescue Exception=>e
-        puts "Record(s) didn't update because of this error: #{e}"
+        puts "Some record(s) didn't update because of this error: #{e}"
       end
     end
     
@@ -61,18 +61,8 @@ module ConsoleUpdate
   end
   
   module InstanceMethods
-    def console_edit(options={}) 
+    def console_update(options={}) 
       self.class.console_update([self], options)
-    end
-    
-    def old_console_edit(options={})
-      begin
-        editable_attributes = console_editable_attributes(options)
-        new_attributes = self.class.editor_update(editable_attributes.to_yaml)
-        console_update_attributes new_attributes
-      # rescue
-      #   puts "Failed to update"
-      end
     end
     
     def console_update_attributes(new_attributes)
