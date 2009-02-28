@@ -1,8 +1,12 @@
+current_dir = File.dirname(__FILE__)
+$:.unshift(current_dir) unless $:.include?(current_dir) || $:.include?(File.expand_path(current_dir))
 require 'tempfile'
-require 'yaml'
+require 'console_update/filter'
 
 module ConsoleUpdate
+  class <<self; attr_accessor :filter; end
   def self.included(base)
+    @filter = :yaml
     base.extend ClassMethods
   end
   
@@ -37,19 +41,27 @@ module ConsoleUpdate
     def console_update(records, options={})
       begin
         editable_attributes_array = records.map {|e| e.console_editable_attributes(options) }
-        new_attributes_array = editor_update(editable_attributes_array.to_yaml)
+        editable_string = filter.hashes_to_string(editable_attributes_array)
+        new_attributes_array = editor_update(editable_string)
         records.each do |record|
           if (record_attributes = new_attributes_array.detect {|e| e['id'] == record.id })
             record.update_console_attributes(record_attributes)
           end
         end
+      rescue ConsoleUpdate::Filter::AbstractMethodError
+        puts "Undefined filter method for #{ConsoleUpdate::filter} filter"
+      rescue Test::Unit::AssertionFailedError=>e
+        raise e
       rescue Exception=>e
-        raise e if e.is_a?(Test::Unit::AssertionFailedError)
         puts "Some record(s) didn't update because of this error: #{e}"
       ensure
         #this attribute should only last duration of method
         reset_editable_attribute_names
       end
+    end
+    
+    def filter
+      @filter ||= ConsoleUpdate::Filter.new(ConsoleUpdate.filter)
     end
     
     def find_and_console_update(id, options={})
@@ -60,7 +72,8 @@ module ConsoleUpdate
       tmpfile = Tempfile.new('console_update')
       File.open(tmpfile.path, 'w+') {|f| f.write(string)}
       system(console_editor, tmpfile.path)
-      YAML::load_file(tmpfile.path)
+      updated_string = File.read(tmpfile.path)
+      filter.string_to_hashes(updated_string)
     end
 
     def reset_editable_attribute_names; @editable_attribute_names = nil ; end
