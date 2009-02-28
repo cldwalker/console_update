@@ -3,11 +3,15 @@ require 'console_update/filter/yaml'
 module ConsoleUpdate
   class Filter
     class AbstractMethodError < StandardError; end
+    class FilterNotFoundError < StandardError; end
     
     def initialize(filter_type)
       @filter_type = filter_type
-      if filter_module = self.class.const_get(filter_type.to_s.capitalize)
+      begin
+        filter_module = self.class.const_get(filter_type.to_s.capitalize)
         self.extend(filter_module)
+      rescue NameError
+        raise FilterNotFoundError
       end
     end
     
