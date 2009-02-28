@@ -20,6 +20,7 @@ ActiveRecord::Base.establish_connection('sqlite3')
 #Define schema
 require File.join(File.dirname(__FILE__), 'schema')
 class Bird < ActiveRecord::Base
+  named_scope :just_big_bird, :conditions=>{:name=>'big bird'}
   attr_protected :description
   attr_accessor :tag_list
   can_console_update
