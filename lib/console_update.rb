@@ -5,16 +5,23 @@ require 'console_update/named_scope'
 require 'console_update/filter'
 
 module ConsoleUpdate
-  class <<self; attr_accessor :filter; end
-  def self.included(base)
+  class <<self; attr_accessor(:filter, :editor); end
+  def self.included(base) #:nodoc:
     @filter = :yaml
+    @editor = ENV["EDITOR"]
     base.extend ClassMethods
   end
   
   module ClassMethods
+    # Enable a model to be updated via the console and an editor. By default editable
+    # attributes are columns with text, boolean or integer-like values.
+    # ==== Options:
+    # [:only] Sets these attributes as the default editable attributes.
+    # [:except] Sets the default editable attributes as normal except for these attributes.
+    # [:editor] Overrides global editor for just this model.
     def can_console_update(options={})
       cattr_accessor :console_editor
-      self.console_editor = options[:editor] || ENV["EDITOR"]
+      self.console_editor = options[:editor] || ConsoleUpdate.editor
       
       cattr_accessor :default_editable_attributes
       if options[:only]
@@ -31,7 +38,7 @@ module ConsoleUpdate
     
     private
     def default_types_to_exclude
-      [:datetime, :timestamp, :binary]
+      [:datetime, :timestamp, :binary, :time, :timestamp]
     end
     
     def get_default_editable_attributes
@@ -40,6 +47,16 @@ module ConsoleUpdate
   end
   
   module SingletonMethods
+    # This is the main method for updating records.
+    # All other update-like methods pass their options through here.
+    # ==== Options:
+    # [:only] Only edit these attributes.
+    # [:except] Edit default attributes except for these.
+    # Examples:
+    #   records = Url.all :limit=>10
+    #   Url.console_update records
+    #   Url.console_update records, :only=>%w{column1}
+    #   Url.console_update records, :except=>%w{column1}
     def console_update(records, options={})
       begin
         editable_attributes_array = records.map {|e| e.console_editable_attributes(options) }
@@ -62,22 +79,24 @@ module ConsoleUpdate
       end
     end
     
-    def filter
+    def filter #:nodoc:
       @filter ||= ConsoleUpdate::Filter.new(ConsoleUpdate.filter)
     end
     
+    # Console updates a record given an id.
     def find_and_console_update(id, options={})
       console_update([find(id)], options)
     end
     
-    def editor_update(string)
+    # :stopdoc:
+    def editor_update(string) 
       tmpfile = Tempfile.new('console_update')
       File.open(tmpfile.path, 'w+') {|f| f.write(string)}
       system(console_editor, tmpfile.path)
       updated_string = File.read(tmpfile.path)
       filter.string_to_hashes(updated_string)
     end
-
+    
     def reset_editable_attribute_names; @editable_attribute_names = nil ; end
     
     def editable_attribute_names(options={})
@@ -92,13 +111,16 @@ module ConsoleUpdate
       end
       @editable_attribute_names
     end
+    # :startdoc:
   end
   
   module InstanceMethods
+    # Console updates the object.
     def console_update(options={}) 
       self.class.console_update([self], options)
     end
     
+    # :stopdoc:
     def update_console_attributes(new_attributes)
       # delete if value is the same or is an attribute that isn't supposed to be edited
       new_attributes.delete_if {|k,v|
@@ -122,5 +144,6 @@ module ConsoleUpdate
       fresh_attributes['id'] ||= self.id
       fresh_attributes
     end
+    #:startdoc:
   end  
 end

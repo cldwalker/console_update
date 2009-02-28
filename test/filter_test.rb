@@ -20,4 +20,9 @@ class ConsoleUpdate::FilterTest < Test::Unit::TestCase
       ConsoleUpdate::Filter.new(:test).string_to_hashes('blah')
     }    
   end
+
+  test "extends filter for a non-lowercase filter name correctly" do
+    filter_meta_class = ConsoleUpdate::Filter.new("Test").instance_eval("class<<self; self;end")
+    filter_meta_class.ancestors.include?(ConsoleUpdate::Filter::Test).should be(true)
+  end
 end

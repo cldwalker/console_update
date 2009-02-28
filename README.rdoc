@@ -1,0 +1,91 @@
+== Description
+
+Updates records from the console via your preferred editor. You can update a record's columns as
+well as <i>any attribute</i> that has accessor methods.  Records are edited via a temporary file and
+once saved, the records are updated. Records go through a filter to go in and out of a file. Yaml is
+the default filter, but you can define your own filter simply with a module and 2 expected methods.
+See ConsoleUpdate::Filter for more details.
+
+== Examples
+
+For a given model Url, update your records as you please:
+
+  # Update a record from the object
+  Url.first.console_update
+
+  # Update a group of records
+  records = Url.all :limit=>10
+  Url.console_update records
+
+  # Find and update by a given id
+  Url.find_and_console_update 10
+
+  # Update through any named_scope ie tagged_with()
+  Url.tagged_with("sweetness").console_update
+  
+== Setup
+
+Define your editor if not already picked up by environment variable $EDITOR:
+
+  ConsoleUpdate.editor = 'vim'
+
+Configure model(s) to update from the console:
+
+  class Url
+    can_console_update
+  end
+
+By default, can_console_update() has sensical defaults for what attributes to update.
+But you can setup your own defaults as needed:
+
+  can_console_update :only=>%w{column1 column2 relation_accessor1}
+  can_console_update :except=>%w{column2}
+
+To use the named_scope chaining, enable it once.
+  ConsoleUpdate.enable_named_scope
+
+== More Examples
+
+Although console_update() uses the default editable columns, it can take options to override
+these as needed. Note these options can be passed to any of the console_update-like methods shown
+above:
+
+  records = Url.all :limit=>100
+  # Only edit this one attribute
+  Url.console_update records, :only=>%w{description}
+  # Edit all the default attributes except this one
+  Url.console_update records, :except=>%w{description}
+
+As mentioned above, any attribute can be edited. This means it's possible to edit associated
+values as well as column values.
+
+Say we have a Url that has many tags and accessor methods to edit them ie tag_list() and
+tag_list=():
+
+  @url.tag_list = ['tag1', 'tag2']
+  @url.save
+  @url.tag_list # =>['tag1', 'tag2']
+
+By simply passing 'tag_list' as another attribute to console_update() or can_console_update(),
+we can edit these associated values:
+   class Url
+     can_console_update :only=>%w{column1 column2 tag_list}
+   end
+
+   Url.console_update records, :only=>%w{column1 column2 tag_list}
+
+== Caveats
+So should you be updating production records with this plugin? Yes and no.
+Yes, if you're updating some simple string/text values. If editing more complex objects
+ie non-string objects and associated objects, try edge cases to ensure the updates work as expected.
+Although this plugin already comes with decent tests, I'm always open to patches for edge cases I
+may have missed.
+
+== Motivation
+The need for editing speed in my {console-based project}[http://github.com/cldwalker/tag-tree].
+
+== Todo
+
+* Have a config file as an alternative configuration method which
+  doesn't clutter models with can_console_update() calls.
+* Make ORM-agnostic.
