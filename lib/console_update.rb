@@ -1,6 +1,7 @@
 current_dir = File.dirname(__FILE__)
 $:.unshift(current_dir) unless $:.include?(current_dir) || $:.include?(File.expand_path(current_dir))
 require 'tempfile'
+require 'console_update/named_scope'
 require 'console_update/filter'
 
 module ConsoleUpdate
@@ -14,6 +15,7 @@ module ConsoleUpdate
     def can_console_update(options={})
       cattr_accessor :console_editor
       self.console_editor = options[:editor] || ENV["EDITOR"]
+      
       cattr_accessor :default_editable_attributes
       if options[:only]
         self.default_editable_attributes = options[:only]
@@ -120,5 +122,5 @@ module ConsoleUpdate
       fresh_attributes['id'] ||= self.id
       fresh_attributes
     end
-  end
+  end  
 end
