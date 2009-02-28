@@ -1,2 +1,1 @@
-require 'console_update'
-ActiveRecord::Base.send :include, ConsoleUpdate
+require File.join(File.dirname(__FILE__), 'rails', 'init.rb')

@@ -2,7 +2,7 @@
 
 Updates records from the console via your preferred editor. You can update a record's columns as
 well as <i>any attribute</i> that has accessor methods.  Records are edited via a temporary file and
-once saved, the records are updated. Records go through a filter to go in and out of a file. Yaml is
+once saved, the records are updated. Records go through a filter before and after editing the file. Yaml is
 the default filter, but you can define your own filter simply with a module and 2 expected methods.
 See ConsoleUpdate::Filter for more details.
 
@@ -10,18 +10,20 @@ See ConsoleUpdate::Filter for more details.
 
 For a given model Url, update your records as you please:
 
+  bash> script/console
+
   # Update a record from the object
-  Url.first.console_update
+  >> Url.first.console_update
 
   # Update a group of records
-  records = Url.all :limit=>10
-  Url.console_update records
+  >> records = Url.all :limit=>10
+  >> Url.console_update records
 
   # Find and update by a given id
-  Url.find_and_console_update 10
+  >> Url.find_and_console_update 10
 
   # Update through any named_scope ie tagged_with()
-  Url.tagged_with("sweetness").console_update
+  >> Url.tagged_with("sweetness").console_update
   
 == Setup
 
