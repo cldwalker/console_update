@@ -6,6 +6,19 @@ once saved, the records are updated. Records go through a filter before and afte
 the default filter, but you can define your own filter simply with a module and 2 expected methods.
 See ConsoleUpdate::Filter for more details.
 
+== Install
+
+Install as a gem
+
+    bash> gem install cldwalker-console_update -s http://gems.github.com
+
+    # add in config/environment.rb
+    config.gem "cldwalker-console_update", :source => "http://gems.github.com", :lib => "console_update"
+
+Or as a plugin
+
+    bash> script/plugin install git://github.com/cldwalker/console_update.git
+
 == Examples
 
 For a given model Url, update your records as you please:
