@@ -6,8 +6,8 @@ module ConsoleUpdate
   # Each hash should have an id attribute to map it to its database record.
   # To create your own filter, create a module in the ConsoleUpdate::Filter namespace.
   # Although the name of the module can be anything, if only the first letter is capitalized
-  # then a simple lowercase name of the filter can be used with ConsoleUpdate.filter(). For example
-  # :yaml instead of Yaml.
+  # then a simple lowercase name of the filter can be used with ConsoleUpdate.filter() (ie :yaml
+  # instead of Yaml). For now, new filters have to be manually loaded/required.
   #
   # A filter should have two methods defined, string_to_hashes() and hashes_to_string().
   # For a good example of a filter see ConsoleUpdate::Filter::Yaml.
