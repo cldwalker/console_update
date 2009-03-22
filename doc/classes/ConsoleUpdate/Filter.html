@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Class: ConsoleUpdate::Filter [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          ConsoleUpdate::Filter
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../files/lib/console_update/filter/yaml_rb.html">lib/console_update/filter/yaml.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/console_update/filter_rb.html">lib/console_update/filter.rb</a>
+          </li>
+          <li>
+            <a class='show' href='#' onclick='this.parentNode.parentNode.className += " expanded"; this.parentNode.removeChild(this); return false'>show all</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            A filter converts database records to a string and vice versa. A database
+            record is represented as a hash of attributes with stringified keys. Each
+            hash should have an id attribute to map it to its database record. To
+            create your own filter, create a module in the <a
+            href="Filter.html">ConsoleUpdate::Filter</a> namespace. Although the name
+            of the module can be anything, if only the first letter is capitalized then
+            a simple lowercase name of the filter can be used with
+            ConsoleUpdate.filter() (ie :yaml instead of <a
+            href="Filter/Yaml.html">Yaml</a>). For now, new filters have to be manually
+            loaded/required.
+            </p>
+            <p>
+            A filter should have two methods defined, <a
+            href="Filter.html#M000008">string_to_hashes</a>() and <a
+            href="Filter.html#M000007">hashes_to_string</a>(). For a good example of a
+            filter see <a href="Filter/Yaml.html">ConsoleUpdate::Filter::Yaml</a>.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000006">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000007">hashes_to_string</a></li>
+              <li><a href="#M000008">string_to_hashes</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Module <a href="Filter/Yaml.html" class="link">ConsoleUpdate::Filter::Yaml</a><br />
+              Class <a href="Filter/AbstractMethodError.html" class="link">ConsoleUpdate::Filter::AbstractMethodError</a><br />
+              Class <a href="Filter/FilterNotFoundError.html" class="link">ConsoleUpdate::Filter::FilterNotFoundError</a><br />
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000006'>
+                <a name='M000006'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(filter_type)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Creates a filter given a type.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000006-source'><span class="ruby-comment cmt"># File lib/console_update/filter.rb, line 20</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">filter_type</span>)&#x000A;      <span class="ruby-ivar">@filter_type</span> = <span class="ruby-identifier">filter_type</span>&#x000A;      <span class="ruby-keyword kw">begin</span>&#x000A;        <span class="ruby-identifier">filter_module</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">filter_type</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/^([a-z])/</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">$1</span>.<span class="ruby-identifier">upcase</span> })&#x000A;        <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-identifier">filter_module</span>)&#x000A;      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">NameError</span>&#x000A;        <span class="ruby-identifier">raise</span> <span class="ruby-constant">FilterNotFoundError</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000007'>
+                <a name='M000007'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>hashes_to_string</span>
+                  <span class='arguments'>(hashes)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Takes an an array of hashes representing database records and converts them
+                  to a string for editing.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/console_update/filter.rb, line 31</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hashes_to_string</span>(<span class="ruby-identifier">hashes</span>)&#x000A;      <span class="ruby-identifier">raise</span> <span class="ruby-constant">AbstractMethodError</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000008'>
+                <a name='M000008'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>string_to_hashes</span>
+                  <span class='arguments'>(string)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Takes the string from the updated file and converts back to an array of
+                  hashes.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000008-source'><span class="ruby-comment cmt"># File lib/console_update/filter.rb, line 36</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">string_to_hashes</span>(<span class="ruby-identifier">string</span>)&#x000A;      <span class="ruby-identifier">raise</span> <span class="ruby-constant">AbstractMethodError</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>File: README.rdoc [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>README.rdoc</h1>
+        <div class='paths'>
+          README.rdoc
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>Sat Mar 21 19:22:03 -0400 2009</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <h2>Description</h2>
+            <p>
+            Updates records from the console via your preferred editor. You can update
+            a record&#8217;s columns as well as <em>any attribute</em> that has
+            accessor methods. Records are edited via a temporary file and once saved,
+            the records are updated. Records go through a filter before and after
+            editing the file. Yaml is the default filter, but you can define your own
+            filter simply with a module and 2 expected methods. See <a
+            href="../classes/ConsoleUpdate/Filter.html">ConsoleUpdate::Filter</a> for
+            more details.
+            </p>
+            <h2>Install</h2>
+            <p>
+            Install as a gem
+            </p>
+            <pre>bash&gt; gem install cldwalker-console_update -s http://gems.github.com&#x000A;&#x000A;# add in config/environment.rb&#x000A;config.gem &quot;cldwalker-console_update&quot;, :source =&gt; &quot;http://gems.github.com&quot;, :lib =&gt; &quot;console_update&quot;</pre>
+            <p>
+            Or as a plugin
+            </p>
+            <pre>bash&gt; script/plugin install git://github.com/cldwalker/console_update.git</pre>
+            <h2>Examples</h2>
+            <p>
+            For a given model Url, update your records as you please:
+            </p>
+            <pre>bash&gt; script/console&#x000A;&#x000A;# Update a record from the object&#x000A;&gt;&gt; Url.first.console_update&#x000A;&#x000A;# Update a group of records&#x000A;&gt;&gt; records = Url.all :limit=&gt;10&#x000A;&gt;&gt; Url.console_update records&#x000A;&#x000A;# Find and update by a given id&#x000A;&gt;&gt; Url.find_and_console_update 10&#x000A;&#x000A;# Update through any named_scope ie tagged_with()&#x000A;&gt;&gt; Url.tagged_with(&quot;sweetness&quot;).console_update</pre>
+            <h2>Setup</h2>
+            <p>
+            Define your editor if not already picked up by environment variable
+            $EDITOR:
+            </p>
+            <pre>ConsoleUpdate.editor = 'vim'</pre>
+            <p>
+            Configure model(s) to update from the console:
+            </p>
+            <pre>class Url&#x000A;  can_console_update&#x000A;end</pre>
+            <p>
+            By default, can_console_update() has sensical defaults for what attributes
+            to update. But you can setup your own defaults as needed:
+            </p>
+            <pre>can_console_update :only=&gt;%w{column1 column2 relation_accessor1}&#x000A;can_console_update :except=&gt;%w{column2}</pre>
+            <p>
+            To use the named_scope chaining, enable it once.
+            </p>
+            <pre>ConsoleUpdate.enable_named_scope</pre>
+            <h2>More Examples</h2>
+            <p>
+            Although console_update() uses the default editable columns, it can take
+            options to override these as needed. Note these options can be passed to
+            any of the console_update-like methods shown above:
+            </p>
+            <pre>records = Url.all :limit=&gt;100&#x000A;# Only edit this one attribute&#x000A;Url.console_update records, :only=&gt;%w{description}&#x000A;# Edit all the default attributes except this one&#x000A;Url.console_update records, :except=&gt;%w{description}</pre>
+            <p>
+            As mentioned above, any attribute can be edited. This means it&#8217;s
+            possible to edit associated values as well as column values.
+            </p>
+            <p>
+            Say we have a Url that has many tags and accessor methods to edit them ie
+            tag_list() and tag_list=():
+            </p>
+            <pre>@url.tag_list = ['tag1', 'tag2']&#x000A;@url.save&#x000A;@url.tag_list # =&gt;['tag1', 'tag2']</pre>
+            <p>
+            By simply passing &#8216;tag_list&#8217; as another attribute to
+            console_update() or can_console_update(), we can edit these associated
+            values:
+            </p>
+            <pre>class Url&#x000A;  can_console_update :only=&gt;%w{column1 column2 tag_list}&#x000A;end&#x000A;&#x000A;Url.console_update records, :only=&gt;%w{column1 column2 tag_list}</pre>
+            <h2>Caveats</h2>
+            <p>
+            So should you be updating production records with this plugin? Yes and no.
+            Yes, if you&#8217;re updating some simple string/text values. If editing
+            more complex objects ie non-string objects and associated objects, try edge
+            cases to ensure the updates work as expected. Although this plugin already
+            comes with decent tests, I&#8217;m always open to patches for edge cases I
+            may have missed.
+            </p>
+            <h2>Motivation</h2>
+            <p>
+            The need for editing speed in my <a
+            href="http://github.com/cldwalker/tag-tree">console-based project</a>.
+            </p>
+            <h2>Bugs</h2>
+            <p>
+            Please report them as tickets here: <a
+            href="http://cldwalker.lighthouseapp.com/projects/27813-console_update/tickets">cldwalker.lighthouseapp.com/projects/27813-console_update/tickets</a>
+            </p>
+            <h2>Links</h2>
+            <ul>
+            <li><a
+            href="http://tagaholic.me/2009/02/28/Console-Update-With-Your-Editor.html">tagaholic.me/2009/02/28/Console-Update-With-Your-Editor.html</a>
+            
+            </li>
+            </ul>
+            <h2>Todo</h2>
+            <ul>
+            <li>Have a config file as an alternative configuration method which
+            doesn&#8217;t clutter models with can_console_update() calls.
+            
+            </li>
+            <li>Make ORM-agnostic.
+            
+            </li>
+            </ul>
+          </div>
+          <div id='section'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
