@@ -99,8 +99,8 @@ may have missed.
 == Motivation
 The need for editing speed in my {console-based project}[http://github.com/cldwalker/tag-tree].
 
-== Bugs
-Please report them as tickets here: http://cldwalker.lighthouseapp.com/projects/27813-console_update/tickets
+== Issues/Bugs
+Please report them {on github}[http://github.com/cldwalker/console_update/issues].
 
 == Links
 * http://tagaholic.me/2009/02/28/Console-Update-With-Your-Editor.html
