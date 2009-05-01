@@ -3,7 +3,7 @@
 
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Tagaholic - console_update</title>
     
       <meta name="keywords" content="rails, database records, script/console, edit records, irb, console_update, activerecord, database editor" />
@@ -16,7 +16,6 @@
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic' title="All Tagaholic posts"/>
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/tag' title="Tagaholic posts tagged tag"/>
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/ruby' title="Tagaholic posts tagged ruby"/>
-    <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/github' title="Tagaholic posts tagged github"/>
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/rails' title="Tagaholic posts tagged rails"/>
   </head>
   <body>
@@ -43,8 +42,10 @@
   .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
   .download { float: right; }
   pre { background: #000; color: #fff; padding: 15px;}
+  #install { font-size: 1.2em}
   hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
   .footer { text-align:center; padding-top:30px; font-style: italic; }
+  #documentation_link {font-weight: bold;}
 </style>
 
 <a href="http://github.com/cldwalker/console_update"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
@@ -66,14 +67,23 @@
 
 
 <h2>Install</h2>
-<p>gem install cldwalker-console_update -s http://gems.github.com</p>
+<pre id="install">gem install cldwalker-console_update --source http://gems.github.com</pre>
 
 
-<h2>Documentation</h2>
+<h2>Description</h2>
 <p>
-   Updates records from the console via your preferred editor. You can update a record's columns as well as <i>any attribute</i> that has accessor methods.  Records are edited via a temporary file and once saved, the records are updated. Records go through a filter before and after editing the file. Yaml is the default filter, but you can define your own filter simply with a module and 2 expected methods. See ConsoleUpdate::Filter for more details. 
+  <p>
+Updates records from the console via your preferred editor. You can update
+a record&#8217;s columns as well as <em>any attribute</em> that has
+accessor methods. Records are edited via a temporary file and once saved,
+the records are updated. Records go through a filter before and after
+editing the file. Yaml is the default filter, but you can define your own
+filter simply with a module and 2 expected methods. See
+ConsoleUpdate::Filter for more details.
+</p>
+
   
-  <p> <a href="doc/index.html">Read full documentation...</a></p>
+  <p> <a id="documentation_link" href="doc/index.html">Read documentation.</a></p>
 </p>
 
 <h2>License</h2>
@@ -82,10 +92,8 @@
 <h2>Authors</h2>
 <p>Gabriel Horner (gabriel.horner [AT] gmail.com)</p>
 
-
-<h2>Bugs</h2>
-<p><a href="http://cldwalker.lighthouseapp.com/projects/27813-console_update/tickets">Please report them as tickets.</a>
-
+<h2>Issues</h2>
+<p>Issues, bugs? <a href="http://github.com/cldwalker/console_update/issues">Please report them on github.</a>
 
 <h2>Download</h2>
 <p>
