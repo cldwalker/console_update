@@ -10,10 +10,10 @@ See ConsoleUpdate::Filter for more details.
 
 Install as a gem
 
-    bash> gem install cldwalker-console_update -s http://gems.github.com
+    bash> gem install console_update
 
     # add in config/environment.rb
-    config.gem "cldwalker-console_update", :source => "http://gems.github.com", :lib => "console_update"
+    config.gem "console_update"
 
 Or as a plugin
 
