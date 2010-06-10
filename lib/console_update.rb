@@ -1,6 +1,7 @@
 require 'tempfile'
 require 'console_update/named_scope'
 require 'console_update/filter'
+require 'console_update/version'
 
 module ConsoleUpdate
   class <<self; attr_accessor(:filter, :editor); end
