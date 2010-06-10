@@ -4,7 +4,8 @@ Updates records from the console via your preferred editor. You can update a rec
 well as <i>any attribute</i> that has accessor methods.  Records are edited via a temporary file and
 once saved, the records are updated. Records go through a filter before and after editing the file. Yaml is
 the default filter, but you can define your own filter simply with a module and 2 expected methods.
-See ConsoleUpdate::Filter for more details.
+See ConsoleUpdate::Filter for more details. Compatible with all major Ruby versions and Rails 2.3.x
+and up.
 
 == Install
 
