@@ -1,9 +1,8 @@
 require 'rubygems'
+require 'mocha'
+require 'mocha-on-bacon'
+require 'bacon'
 require 'activerecord'
-require 'test/unit'
-require 'context' #gem install jeremymcanally-context -s http://gems.github.com
-require 'matchy' #gem install jeremymcanally-matchy -s http://gems.github.com
-require 'stump' #gem install jeremymcanally-stump -s http://gems.github.com
 require 'console_update'
 require File.join(File.dirname(__FILE__), '..', 'init')
 
@@ -19,14 +18,16 @@ ActiveRecord::Base.establish_connection('sqlite3')
 
 #Define schema
 require File.join(File.dirname(__FILE__), 'schema')
-class Bird < ActiveRecord::Base
+class ::Bird < ActiveRecord::Base
   named_scope :just_big_bird, :conditions=>{:name=>'big bird'}
   attr_protected :description
   attr_accessor :tag_list
   can_console_update
 end
 
-class Test::Unit::TestCase
+class Bacon::Context
+  def before_all; yield; end
+
   def capture_stdout(&block)
     original_stdout = $stdout
     $stdout = fake = StringIO.new

@@ -67,9 +67,7 @@ module ConsoleUpdate
         end
       rescue ConsoleUpdate::Filter::AbstractMethodError
         puts "Undefined filter method for #{ConsoleUpdate::filter} filter"
-      rescue Test::Unit::AssertionFailedError=>e
-        raise e
-      rescue Exception=>e
+      rescue StandardError=>e
         puts "Some record(s) didn't update because of this error: #{e}"
       ensure
         #this attribute should only last duration of method

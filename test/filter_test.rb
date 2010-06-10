@@ -8,21 +8,22 @@ module ConsoleUpdate
   end
 end
 
-class ConsoleUpdate::FilterTest < Test::Unit::TestCase
-  test "incorrect filter name raises FilterNotFoundError" do
-    assert_raises(ConsoleUpdate::Filter::FilterNotFoundError) {
+# class ConsoleUpdate::FilterTest < Test::Unit::TestCase
+describe "Filter" do
+  it "incorrect filter name raises FilterNotFoundError" do
+    should.raise(ConsoleUpdate::Filter::FilterNotFoundError) {
       ConsoleUpdate::Filter.new(:blah)
     }
   end
   
-  test "filter without proper methods raises AbstractMethodError" do
-    assert_raises(ConsoleUpdate::Filter::AbstractMethodError) {
+  it "filter without proper methods raises AbstractMethodError" do
+    should.raise(ConsoleUpdate::Filter::AbstractMethodError) {
       ConsoleUpdate::Filter.new(:test).string_to_hashes('blah')
     }    
   end
 
-  test "extends filter for a non-lowercase filter name correctly" do
+  it "extends filter for a non-lowercase filter name correctly" do
     filter_meta_class = ConsoleUpdate::Filter.new("Test").instance_eval("class<<self; self;end")
-    filter_meta_class.ancestors.include?(ConsoleUpdate::Filter::Test).should be(true)
+    filter_meta_class.ancestors.include?(ConsoleUpdate::Filter::Test).should == true
   end
 end
