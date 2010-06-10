@@ -34,7 +34,6 @@ describe "ConsoleUpdate" do
   end
   
   describe "console_update" do
-    before_all { Bird.can_console_update }
     before { Bird.delete_all }
     
     def create_big_bird(attributes={})
@@ -120,7 +119,8 @@ describe "ConsoleUpdate" do
       @big_bird.reload.nickname.should.not == 'doofird'
     end
   end
-  
+
+  # TODO
   # it "editable_attribute_names expire per console_update" do
   #   @big_bird = Bird.create({:name=>"big bird"})
   #   stub_editor_update_with_records([{'name'=>'big birded', 'id'=>@big_bird.id}], :expected_attributes=>["id", "name"])
