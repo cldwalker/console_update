@@ -1,3 +1,8 @@
+== 0.1.3
+* Converted tests to use bacon
+* Proper versioning
+* Got rid of jeweler and $: hacks
+
 == 0.1.2
 * Release to rubyforge
 
