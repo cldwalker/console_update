@@ -1,3 +1,6 @@
+== 0.1.4
+* Added forgotten init.rb to gemspec
+
 == 0.1.3
 * Converted tests to use bacon
 * Proper versioning
