@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.description = "Updates records from the console via your preferred editor. You can update a record's columns as well as any attribute that has accessor methods. Records are edited via a temporary file and once saved, the records are updated. Records go through a filter before and after editing the file. Yaml is the default filter, but you can define your own filters."
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project = 'tagaholic'
-  s.add_development_dependency 'bacon'
+  s.add_development_dependency 'bacon', '>= 1.1.0'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'mocha-on-bacon'
-  s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c}]) + %w{Rakefile .gemspec}
+  s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} **/deps.rip]) + %w{Rakefile .gemspec}
   s.files += ['init.rb']
   s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
   s.license = 'MIT'
