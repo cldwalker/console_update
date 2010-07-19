@@ -100,7 +100,7 @@ may have missed.
 == Motivation
 The need for editing speed in my {console-based project}[http://github.com/cldwalker/tag-tree].
 
-== Issues/Bugs
+== Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/console_update/issues].
 
 == Links
