@@ -11,20 +11,23 @@ and up.
 
 Install as a gem
 
-    bash> gem install console_update
+    $ gem install console_update
 
-    # add in config/environment.rb
+    # with bundler: add in Gemfile
+    gem 'console_update', :require=>'console_update/activerecord'
+
+    # without bundler: add in config/environment.rb
     config.gem "console_update"
 
 Or as a plugin
 
-    bash> script/plugin install git://github.com/cldwalker/console_update.git
+    $ script/plugin install git://github.com/cldwalker/console_update.git
 
 == Examples
 
 For a given model Url, update your records as you please:
 
-  bash> script/console
+  $ script/console
 
   # Update a record from the object
   >> Url.first.console_update
