@@ -1,1 +1,1 @@
-ActiveRecord::Base.send :include, ConsoleUpdate
+require 'console_update/activerecord'
