@@ -144,3 +144,5 @@ module ConsoleUpdate
     #:startdoc:
   end  
 end
+
+ActiveRecord::Base.send :include, ConsoleUpdate if defined?(ActiveRecord::Base)

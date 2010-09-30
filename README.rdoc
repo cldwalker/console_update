@@ -14,7 +14,7 @@ Install as a gem
     $ gem install console_update
 
     # with bundler: add in Gemfile
-    gem 'console_update', :require=>'console_update/activerecord'
+    gem 'console_update'
 
     # without bundler: add in config/environment.rb
     config.gem "console_update"

@@ -1,1 +1,1 @@
-require 'console_update/activerecord'
+require 'console_update'
