@@ -1,3 +1,6 @@
+== 0.1.6
+* Fix test setup
+
 == 0.1.5
 * Added rails3 support
 
