@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'activerecord', '~> 2.3.0'
   s.add_development_dependency 'sqlite3', '~> 1.3.0'
   s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} **/deps.rip]) + %w{Rakefile .gemspec .travis.yml}
-  s.files += ['init.rb']
+  s.files += ['init.rb', '.gitignore', 'Gemfile']
   s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
   s.license = 'MIT'
 end
