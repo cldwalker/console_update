@@ -1,7 +1,8 @@
 require 'mocha'
 require 'mocha-on-bacon'
 require 'bacon'
-require 'activerecord'
+require 'bacon/bits'
+require 'active_record'
 require 'console_update'
 require File.join(File.dirname(__FILE__), '..', 'init')
 

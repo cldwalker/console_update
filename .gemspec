@@ -14,7 +14,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bacon', '>= 1.1.0'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'mocha-on-bacon'
-  s.add_development_dependency 'activerecord', '~> 3.0'
+  s.add_development_dependency 'bacon-bits'
+  s.add_development_dependency 'activerecord', '~> 2.3.0'
+  s.add_development_dependency 'sqlite3', '~> 1.3.0'
   s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} **/deps.rip]) + %w{Rakefile .gemspec}
   s.files += ['init.rb']
   s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
