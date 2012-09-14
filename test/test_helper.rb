@@ -1,4 +1,3 @@
-require 'mocha'
 require 'mocha-on-bacon'
 require 'bacon'
 require 'bacon/bits'
